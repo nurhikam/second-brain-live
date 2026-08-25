@@ -5,6 +5,8 @@ set -euo pipefail
 
 VAULT="${VAULT:-$(cd "$(dirname "$0")/../second-brain" && pwd)}"
 DEST="$(cd "$(dirname "$0")" && pwd)/content"
+# never leaves the machine, whatever its frontmatter says
+PRIVATE_DIR="50_Private"
 
 [ -d "$VAULT" ] || { echo "vault not found: $VAULT (set VAULT=...)" >&2; exit 1; }
 
@@ -20,6 +22,8 @@ while IFS= read -r -d '' f; do
   cp "$f" "$DEST/$rel"
   echo "  + $rel"
   n=$((n+1))
-done < <(find "$VAULT" -name '*.md' -not -path '*/.git/*' -not -path '*/.obsidian/*' -print0)
+done < <(find "$VAULT" -name '*.md' \
+  -not -path '*/.git/*' -not -path '*/.obsidian/*' \
+  -not -path "$VAULT/$PRIVATE_DIR/*" -print0)
 
 echo "synced $n note(s) -> content/"
