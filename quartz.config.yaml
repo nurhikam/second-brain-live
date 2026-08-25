@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: null
   locale: en-US
-  baseUrl: nurhikam.github.io/second-brain-live
+  baseUrl: notes.nurhikam.my.id
   ignorePatterns:
     - private
     - templates
@@ -125,7 +125,7 @@ plugins:
   - source: "@quartz-community/og-image"
     enabled: true
   - source: "@quartz-community/cname"
-    enabled: false
+    enabled: true
   - source: "@quartz-community/canvas-page"
     enabled: true
   - source: "@quartz-community/content-page"

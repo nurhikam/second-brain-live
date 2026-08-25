@@ -53,7 +53,7 @@ Satu arah. Situs nggak pernah nulis balik ke vault.
 | Filter di sync, bukan di build | Note privat nggak pernah masuk history repo publik. |
 | Geist + Geist Mono | Bukan Inter, bukan default Quartz. Cocok buat konteks teknis. |
 | Aksen hijau forest, satu warna, dua mode | Bukan AI-purple. Satu aksen dikunci di light dan dark. |
-| Plugin `cname` dimatiin | Ini project page, bukan custom domain. CNAME bikin routing rusak. |
+| Plugin `cname` nyala, isi `notes.nurhikam.my.id` | Situs pakai custom domain. Sempat dimatiin waktu masih di project page. |
 
 ## Acceptance
 - [x] Note tanpa `publish: true` nggak pernah sampai ke `content/`
@@ -61,5 +61,5 @@ Satu arah. Situs nggak pernah nulis balik ke vault.
 - [x] Wikilink, backlink, dan graph jalan
 - [x] Graph dan backlink kelihatan di mobile, bukan cuma desktop
 - [x] Kontras teks lolos WCAG AA di light dan dark
-- [x] Situs live di https://nurhikam.github.io/second-brain-live/
+- [x] Situs live di https://notes.nurhikam.my.id
 - [ ] Ada note asli yang kepublish, bukan cuma homepage
