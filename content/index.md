@@ -5,4 +5,4 @@ publish: true
 
 Catatan publik dari vault pribadi gue. Cuma note yang ditandai `publish: true` yang muncul di sini. Sisanya nggak pernah keluar dari mesin lokal.
 
-Mulai dari [[30_Resources]] atau pakai search di kiri.
+Mulai dari [Resources](/Resources/) atau pakai search di kiri.

@@ -6,7 +6,7 @@ set -euo pipefail
 VAULT="${VAULT:-$(cd "$(dirname "$0")/../second-brain" && pwd)}"
 DEST="$(cd "$(dirname "$0")" && pwd)/content"
 # never leaves the machine, whatever its frontmatter says
-PRIVATE_DIR="50_Private"
+PRIVATE_DIR="Private"
 
 [ -d "$VAULT" ] || { echo "vault not found: $VAULT (set VAULT=...)" >&2; exit 1; }
 

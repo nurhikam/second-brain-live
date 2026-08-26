@@ -9,7 +9,7 @@ Bikin vault Obsidian pribadi (`../second-brain`, repo privat) bisa dibaca publik
 - Nggak nyentuh isi vault selain nambah field `publish` di frontmatter.
 
 ## Constraint
-- Vault privat dan harus tetap privat. Isinya ada `40_Archive/Private/Passw.md` dan 67 note jurnal.
+- Vault privat dan harus tetap privat. Isinya ada `Private/Passw.md` dan 67 note jurnal.
 - Akun GitHub Free: Pages cuma jalan dari repo publik. Jadi repo situs harus terpisah dari repo vault.
 - Gratis. Nggak nambah layanan berbayar.
 

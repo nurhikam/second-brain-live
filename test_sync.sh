@@ -11,9 +11,9 @@ printf -- 'no frontmatter\npublish: true\n'                      > "$V/no-body.m
 printf -- '---\ntitle: c\n---\ntext\npublish: true\n'            > "$V/no-afterblock.md"
 printf -- '---\npublish: true\n---\nsecret\n'                    > "$V/sub/yes-nested.md"
 printf -- 'PASSWORDS\n'                                          > "$V/Passw.md"
-mkdir -p "$V/50_Private"
+mkdir -p "$V/Private"
 # marked for publish, but sits in the private dir: must still be refused
-printf -- '---\npublish: true\n---\nghp_realtoken\n'              > "$V/50_Private/token.md"
+printf -- '---\npublish: true\n---\nghp_realtoken\n'              > "$V/Private/token.md"
 
 VAULT="$V" ./sync.sh >/dev/null
 
