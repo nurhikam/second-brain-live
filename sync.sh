@@ -4,7 +4,7 @@
 set -euo pipefail
 
 VAULT="${VAULT:-$(cd "$(dirname "$0")/../second-brain" && pwd)}"
-DEST="$(cd "$(dirname "$0")" && pwd)/content"
+DEST="${DEST:-$(cd "$(dirname "$0")" && pwd)/content}"
 # never leaves the machine, whatever its frontmatter says
 PRIVATE_DIR="Private"
 

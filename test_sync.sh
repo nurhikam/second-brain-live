@@ -15,8 +15,9 @@ mkdir -p "$V/Private"
 # marked for publish, but sits in the private dir: must still be refused
 printf -- '---\npublish: true\n---\nghp_realtoken\n'              > "$V/Private/token.md"
 
-VAULT="$V" ./sync.sh >/dev/null
+O="$T/out"; mkdir -p "$O"
+VAULT="$V" DEST="$O" ./sync.sh >/dev/null
 
-got=$(cd content && find . -name '*.md' ! -name 'index.md' | sed 's|^\./||' | sort | tr '\n' ' ')
+got=$(cd "$O" && find . -name '*.md' ! -name 'index.md' | sed 's|^\./||' | sort | tr '\n' ' ')
 want="sub/yes-nested.md yes.md "
 [ "$got" = "$want" ] && echo "PASS" || { echo "FAIL: got [$got] want [$want]"; exit 1; }
