@@ -15,9 +15,13 @@ publish: true
 Lalu:
 
 ```bash
-./sync.sh          # copy note ber-publish:true ke content/
+./sync.sh          # copy note ber-publish:true ke content/, plus gambar yang dipake
 git add -A && git commit -m "publish: <judul note>" && git push
 ```
+
+Gambar yang di-embed note kepublish (`![[foo.png]]`) ikut kecopy ke `content/assets/`.
+Yang kecopy cuma yang beneran dipake — folder attachment vault nggak pernah disalin
+bulat-bulat, soalnya isinya campur sama gambar punya note privat.
 
 Push ke `main` men-trigger GitHub Actions → GitHub Pages.
 
