@@ -62,4 +62,4 @@ Satu arah. Situs nggak pernah nulis balik ke vault.
 - [x] Graph dan backlink kelihatan di mobile, bukan cuma desktop
 - [x] Kontras teks lolos WCAG AA di light dan dark
 - [x] Situs live di https://notes.nurhikam.my.id
-- [ ] Ada note asli yang kepublish, bukan cuma homepage
+- [x] Ada note asli yang kepublish, bukan cuma homepage (16 note, commit `37595d5`)
