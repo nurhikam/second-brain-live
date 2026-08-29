@@ -15,12 +15,46 @@ mkdir -p "$V/Private"
 # marked for publish, but sits in the private dir: must still be refused
 printf -- '---\npublish: true\n---\nghp_realtoken\n'              > "$V/Private/token.md"
 
+# --- attachments: one shared folder holding public and private images alike,
+# which is the arrangement that makes "just copy the folder" a data leak
+mkdir -p "$V/Attachment"
+printf 'PUBLIC-PNG\n'   > "$V/Attachment/used.png"
+printf 'PRIVATE-PNG\n'  > "$V/Attachment/private-only.png"
+printf 'UNUSED-PNG\n'   > "$V/Attachment/never-referenced.png"
+# embedded by a published note -> must be copied
+printf -- '---\npublish: true\n---\n![[used.png]]\n![alt](https://ex.com/x.png)\n' > "$V/has-embed.md"
+# embedded only by notes that never publish -> must NOT be copied
+printf -- '---\npublish: false\n---\n![[private-only.png]]\n'     > "$V/no-embed-unpub.md"
+printf -- '---\npublish: true\n---\n![[private-only.png]]\n'      > "$V/Private/embed-private.md"
+
 O="$T/out"; mkdir -p "$O"
 VAULT="$V" DEST="$O" ./sync.sh >/dev/null
 
 got=$(cd "$O" && find . -name '*.md' ! -name 'index.md' | sed 's|^\./||' | sort | tr '\n' ' ')
-want="sub/yes-nested.md yes.md "
+want="has-embed.md sub/yes-nested.md yes.md "
 [ "$got" = "$want" ] && echo "PASS sync" || { echo "FAIL sync: got [$got] want [$want]"; exit 1; }
+
+# --- attachments: only what a published note actually embeds ---
+
+gota=$(cd "$O" && find . -type f ! -name '*.md' | sed 's|^\./||' | sort | tr '\n' ' ')
+wanta="assets/used.png "
+[ "$gota" = "$wanta" ] || { echo "FAIL assets: got [$gota] want [$wanta]"; exit 1; }
+
+# the leak this ticket exists to prevent: an image reachable only from notes
+# that never publish must not be sitting in the output
+[ ! -e "$O/assets/private-only.png" ] \
+  || { echo "FAIL assets: image embedded only by private/unpublished notes was copied"; exit 1; }
+# and copying the folder wholesale would have dragged this one along too
+[ ! -e "$O/assets/never-referenced.png" ] \
+  || { echo "FAIL assets: unreferenced image was copied"; exit 1; }
+
+# a dropped embed must not leave its attachment behind on the next run
+printf -- '---\npublish: true\n---\nno more embed\n' > "$V/has-embed.md"
+VAULT="$V" DEST="$O" ./sync.sh >/dev/null 2>&1
+[ ! -e "$O/assets/used.png" ] \
+  || { echo "FAIL assets: attachment survived its note dropping the embed"; exit 1; }
+
+echo "PASS assets"
 
 # --- check_content.sh: the tripwire for when sync.sh gets bypassed ---
 
