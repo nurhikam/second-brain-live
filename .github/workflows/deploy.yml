@@ -20,6 +20,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # for git-based created/modified dates
+      # fail before the build: an unpublished note must never reach Pages
+      - run: ./check_content.sh
       - uses: actions/setup-node@v4
         with:
           node-version: 22

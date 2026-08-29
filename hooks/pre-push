@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Local mirror of the CI guard, so a leak fails on your machine instead of
+# after it's already public. CI is the authority; this just fails sooner.
+# Enable once per clone:  git config core.hooksPath hooks
+set -euo pipefail
+exec "$(git rev-parse --show-toplevel)/check_content.sh"

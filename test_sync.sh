@@ -20,4 +20,24 @@ VAULT="$V" DEST="$O" ./sync.sh >/dev/null
 
 got=$(cd "$O" && find . -name '*.md' ! -name 'index.md' | sed 's|^\./||' | sort | tr '\n' ' ')
 want="sub/yes-nested.md yes.md "
-[ "$got" = "$want" ] && echo "PASS" || { echo "FAIL: got [$got] want [$want]"; exit 1; }
+[ "$got" = "$want" ] && echo "PASS sync" || { echo "FAIL sync: got [$got] want [$want]"; exit 1; }
+
+# --- check_content.sh: the tripwire for when sync.sh gets bypassed ---
+
+# sync.sh's own output must satisfy the guard, or the two have drifted apart
+DEST="$O" ./check_content.sh >/dev/null \
+  || { echo "FAIL guard: rejected sync.sh's own output"; exit 1; }
+
+# and it must actually trip — a guard that never fails is not a guard
+printf -- '---\npublish: false\n---\nleak\n' > "$O/leak.md"
+if DEST="$O" ./check_content.sh >/dev/null 2>&1; then
+  echo "FAIL guard: passed a file without publish: true"; exit 1
+fi
+rm "$O/leak.md"
+
+# index.md is hand-written and has no frontmatter: it must be exempt
+printf -- 'homepage\n' > "$O/index.md"
+DEST="$O" ./check_content.sh >/dev/null \
+  || { echo "FAIL guard: index.md must be exempt"; exit 1; }
+
+echo "PASS guard"
