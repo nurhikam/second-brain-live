@@ -27,12 +27,38 @@ printf -- '---\npublish: true\n---\n![[used.png]]\n![alt](https://ex.com/x.png)\
 printf -- '---\npublish: false\n---\n![[private-only.png]]\n'     > "$V/no-embed-unpub.md"
 printf -- '---\npublish: true\n---\n![[private-only.png]]\n'      > "$V/Private/embed-private.md"
 
+# --- dates: an author-set date must survive; `date:` is the older spelling
+printf -- '---\ncreated: 2020-01-02\npublish: true\n---\nbody\n'  > "$V/dated.md"
+printf -- '---\ndate: 2019-05-06\npublish: true\n---\nbody\n'     > "$V/legacy-date.md"
+
 O="$T/out"; mkdir -p "$O"
 VAULT="$V" DEST="$O" ./sync.sh >/dev/null
 
 got=$(cd "$O" && find . -name '*.md' ! -name 'index.md' | sed 's|^\./||' | sort | tr '\n' ' ')
-want="has-embed.md sub/yes-nested.md yes.md "
+want="dated.md has-embed.md legacy-date.md sub/yes-nested.md yes.md "
 [ "$got" = "$want" ] && echo "PASS sync" || { echo "FAIL sync: got [$got] want [$want]"; exit 1; }
+
+# --- dates: stamped from the vault, never invented, never doubled ---
+
+fmval() { awk -v f="$2" 'NR==1&&$0!="---"{exit} NR>1&&$0=="---"{exit}
+  NR>1 && tolower($0) ~ "^"f"[[:space:]]*:" {sub(/^[^:]*:[[:space:]]*/,""); print; exit}' "$1"; }
+
+# an author's own created: is authoritative — inference must not overwrite it
+[ "$(fmval "$O/dated.md" created)" = "2020-01-02" ] \
+  || { echo "FAIL dates: overwrote author-set created ($(fmval "$O/dated.md" created))"; exit 1; }
+# the vault's older `date:` spelling means the same thing
+[ "$(fmval "$O/legacy-date.md" created)" = "2019-05-06" ] \
+  || { echo "FAIL dates: did not promote date: to created ($(fmval "$O/legacy-date.md" created))"; exit 1; }
+# a note with no date at all still gets one, from the vault side
+[ -n "$(fmval "$O/yes.md" created)" ] \
+  || { echo "FAIL dates: no created stamped on an undated note"; exit 1; }
+
+# re-syncing must not append a second created:
+VAULT="$V" DEST="$O" ./sync.sh >/dev/null 2>&1
+n=$(grep -c '^created:' "$O/dated.md")
+[ "$n" -eq 1 ] || { echo "FAIL dates: created: appears $n times after re-sync"; exit 1; }
+
+echo "PASS dates"
 
 # --- attachments: only what a published note actually embeds ---
 

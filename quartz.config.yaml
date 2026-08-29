@@ -44,7 +44,10 @@ plugins:
   - source: "@quartz-community/created-modified-date"
     enabled: true
     options:
-      defaultDateType: modified
+      # sync.sh stamps created/modified from the vault, so frontmatter (first in
+      # the priority list below) is authoritative and `created` is safe to show:
+      # it's when the note was written, not when it was published here
+      defaultDateType: created
       priority:
         - frontmatter
         - git

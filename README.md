@@ -23,6 +23,11 @@ Gambar yang di-embed note kepublish (`![[foo.png]]`) ikut kecopy ke `content/ass
 Yang kecopy cuma yang beneran dipake — folder attachment vault nggak pernah disalin
 bulat-bulat, soalnya isinya campur sama gambar punya note privat.
 
+`sync.sh` juga nyisipin `created:`/`modified:` ke note yang dicopy, diambil dari vault
+(frontmatter dulu, baru git vault, baru mtime). Tanpa itu Quartz jatuh ke git repo
+**ini**, yang cuma tau kapan note kepublish — bukan kapan ditulis. Tanggal yang lo tulis
+sendiri di frontmatter nggak akan ditimpa.
+
 Push ke `main` men-trigger GitHub Actions → GitHub Pages.
 
 ## Kenapa filternya di sync, bukan pas build

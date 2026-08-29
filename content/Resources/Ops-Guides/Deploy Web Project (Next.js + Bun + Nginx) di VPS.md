@@ -1,4 +1,6 @@
 ---
+created: 2026-08-27
+modified: 2026-08-27
 link_ref: https://gemini.google.com/share/fbce596355f9
 tags:
   - cheatsheet
